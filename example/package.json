@@ -1,0 +1,7 @@
+{
+  "name": "fleare",
+  "private": true,
+  "dependencies": {
+    "@math-utils": "file:../"
+  }
+}

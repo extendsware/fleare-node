@@ -24,8 +24,8 @@ export class ConnectionPool extends EventEmitter {
     super();
     this.host = _host;
     this.port = _port;
-    this.username = options.username;
-    this.password = options.password;
+    this.username = options.username ?? '';
+    this.password = options.password ?? '';
     this.poolSize = options.poolSize ?? 10;
     this.connectTimeout = options.connectTimeout ?? 30;
     this.retryInterval = options.retryInterval ?? 10;

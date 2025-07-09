@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 
 export interface Options {
-    username: string;
-    password: string;
+    username?: string;
+    password?: string;
     poolSize?: number;
     connectTimeout?: number;
     retryInterval?: number;

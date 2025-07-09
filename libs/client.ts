@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import  commands from "./commands";
 import { ConnectionPool } from "./connections";
 import { Options, ClientState } from "./types";
 import { Command, Response } from "./protobuf/compiled/comm_pb";
