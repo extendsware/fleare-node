@@ -1,8 +1,17 @@
 import { EventEmitter } from "events";
-import  commands from "./commands";
+import { commands, CommandMap } from "./commands";
 import { ConnectionPool } from "./connections";
 import { Options, ClientState } from "./types";
 import { Command, Response } from "./protobuf/compiled/comm_pb";
+
+type CommandFunctions = {
+  [K in keyof CommandMap]: CommandMap[K] extends (
+    this: Client,
+    ...args: infer A
+  ) => infer R
+    ? (...args: A) => R
+    : never;
+};
 
 export class Client extends EventEmitter {
   private connectionPool: ConnectionPool;
@@ -18,6 +27,11 @@ export class Client extends EventEmitter {
 
     this.connectionPool.on("error", (err) => this.emit("error", err));
     this.connectionPool.on("close", () => this.emit("close"));
+
+    // Attach commands with `this` binding
+    for (const [name, handler] of Object.entries(commands)) {
+      (this as any)[name] = handler.bind(this);
+    }
   }
 
   private setState(newState: ClientState): void {
@@ -51,11 +65,7 @@ export class Client extends EventEmitter {
     }
   }
 
-  async send(
-    command: string,
-    args: string[] = [],
-    options?: Options,
-  ): Promise<any> {
+  async executeCommand(command: string, args: string[] = []): Promise<any> {
     if (this.state !== ClientState.CONNECTED) {
       throw new Error("Client is not connected");
     }
@@ -89,6 +99,8 @@ export class Client extends EventEmitter {
     return this.state;
   }
 }
+
+export interface Client extends CommandFunctions {}
 
 /**
  * Creates a new Fleare client instance

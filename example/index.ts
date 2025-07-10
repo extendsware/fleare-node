@@ -1,16 +1,15 @@
-import fleare, {Options} from '../libs';
+import fleare, { Options } from "../libs";
 
 async function main() {
-    
   const client = fleare.createClient("127.0.0.1", 9219, {
     poolSize: 2,
-    // username: "root",
-    // password: "root"
+    username: "root",
+    password: "root",
   });
 
-  client.on("connecting", () => {
-    console.log("Client is connecting...");
-  });
+  // client.on("connecting", () => {
+  //   console.log("Client is connecting...");
+  // });
 
   client.on("connected", () => {
     console.log("Client connected successfully!");
@@ -24,13 +23,13 @@ async function main() {
     console.error("Client error:", err.message);
   });
 
-  client.on("close", () => {
-    console.error("Client close:");
-  });
+  // client.on("close", () => {
+  //   console.error("Client close:");
+  // });
 
-  client.on("stateChanged", (state) => {
-    console.log("Client state changed to:", state);
-  });
+  // client.on("stateChanged", (state) => {
+  //   console.log("Client state changed to:", state);
+  // });
 
   try {
     console.log("Connecting to server...");
@@ -39,8 +38,8 @@ async function main() {
     const l = [];
     const f = async () => {
       for (let index = 0; index < 1; index++) {
-        const res = await client.send("STATUS", []).then((res) => {});
-        // console.log(`Response ${index}:`, res.server_status);
+        const res = await client.exists("key3", "key2", "key1", "key4");
+        console.log(res);
       }
     };
 
@@ -49,7 +48,6 @@ async function main() {
     }
 
     await Promise.all(l);
-
   } catch (err) {
     console.error(err);
   } finally {

@@ -1,10 +1,8 @@
-import createClient, {Client} from "./client";
-import commands from "./commands";
+import createClient, { Client } from "./client";
 
 export default {
   createClient,
   Client,
-  commands
 };
 
 export * from "./types";

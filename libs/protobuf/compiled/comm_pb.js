@@ -2,24 +2,15 @@
 /**
  * @fileoverview
  * @enhanceable
- * @suppress {missingRequire} reports error on implicit type usages.
  * @suppress {messageConventions} JS Compiler reports an error if a variable or
  *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
-/* eslint-disable */
-// @ts-nocheck
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global =
-    (typeof globalThis !== 'undefined' && globalThis) ||
-    (typeof window !== 'undefined' && window) ||
-    (typeof global !== 'undefined' && global) ||
-    (typeof self !== 'undefined' && self) ||
-    (function () { return this; }).call(null) ||
-    Function('return this')();
+var global = Function('return this')();
 
 goog.exportSymbol('proto.comm.Command', null, global);
 goog.exportSymbol('proto.comm.Response', null, global);
@@ -104,8 +95,8 @@ proto.comm.Command.prototype.toObject = function(opt_includeInstance) {
  */
 proto.comm.Command.toObject = function(includeInstance, msg) {
   var f, obj = {
-command: jspb.Message.getFieldWithDefault(msg, 1, ""),
-argsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
+    command: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    argsList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -283,10 +274,10 @@ proto.comm.Response.prototype.toObject = function(opt_includeInstance) {
  */
 proto.comm.Response.toObject = function(includeInstance, msg) {
   var f, obj = {
-clientId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-reqId: jspb.Message.getFieldWithDefault(msg, 2, ""),
-status: jspb.Message.getFieldWithDefault(msg, 3, ""),
-result: msg.getResult_asB64()
+    clientId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    reqId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    status: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    result: msg.getResult_asB64()
   };
 
   if (includeInstance) {
