@@ -92,7 +92,12 @@ export class ConnectionPool extends EventEmitter {
     const connection = this.getNextConnection();
     const cmd = new Command();
     cmd.setCommand(command);
-    cmd.setArgsList(args);
+
+    const stringArray: string[] = args.map(item =>
+      typeof item === "object" && item !== null ? JSON.stringify(item) : String(item)
+    );
+    
+    cmd.setArgsList(stringArray);
 
     await connection.write(cmd);
     const response = await connection.read();

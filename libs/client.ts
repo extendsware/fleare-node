@@ -71,6 +71,8 @@ export class Client extends EventEmitter {
     }
 
     try {
+
+      // convert all args as a string 
       return await this.connectionPool.sendCommand(command, args);
     } catch (err) {
       this.emit(ClientState.ERROR, err);
