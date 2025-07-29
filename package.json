@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc && npm run copy-protobuf",
     "example": "ts-node example/index.ts",
-    "copy-protobuf": "cp -r libs/protobuf/compiled dist/protobuf/compiled",
+    "example-high": "ts-node example/high-concurrency-test.ts",
+    "copy-protobuf": "cp -r libs/compiled dist/compiled/",
     "compile-proto": "bash scripts/compile-proto.sh",
     "prebuild": "npm run compile-proto",
     "prepublish": "npm run compile-proto && npm run build",

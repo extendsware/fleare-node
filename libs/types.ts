@@ -1,12 +1,14 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
 
 export interface Options {
-    username?: string;
-    password?: string;
-    poolSize?: number;
-    connectTimeout?: number;
-    retryInterval?: number;
-    maxRetries?: number;
+  username?: string;
+  password?: string;
+  poolSize?: number;
+  connectTimeout?: number;
+  retryInterval?: number;
+  maxRetries?: number;
+  maxQueueSize?: number;
+  requestTimeout?: number;
 }
 
 // export declare interface Listeners {
@@ -18,10 +20,10 @@ export interface Options {
 // }
 
 export enum ClientState {
-    DISCONNECTED = 'disconnected',
-    CONNECTING = 'connecting',
-    CONNECTED = 'connected',
-    DISCONNECTING = 'disconnecting',
-    CHANGE_STATE = 'stateChanged',
-    ERROR = 'error'
+  DISCONNECTED = "disconnected",
+  CONNECTING = "connecting",
+  CONNECTED = "connected",
+  DISCONNECTING = "disconnecting",
+  CHANGE_STATE = "stateChanged",
+  ERROR = "error",
 }

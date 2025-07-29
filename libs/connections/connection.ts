@@ -1,14 +1,16 @@
 import net from "net";
 import { EventEmitter } from "events";
-import { Command, Response } from "../protobuf/compiled/comm_pb";
+import { Command, Response } from "../compiled/comm_pb";
 
 export class Connection extends EventEmitter {
   private socket: net.Socket;
   private buffer: Buffer = Buffer.alloc(0);
-  private pendingRead: {
+  private readQueue: Array<{
     resolve: (value: Response) => void;
     reject: (reason?: any) => void;
-  } | null = null;
+  }> = [];
+  private maxReadQueueSize: number = 100;
+  private isConnected: boolean = false;
 
   constructor(
     private host: string,
@@ -26,27 +28,46 @@ export class Connection extends EventEmitter {
       this.processBuffer();
     });
 
-    this.socket.on("error", (err) => this.emit("error", err));
-    this.socket.on("close", () => this.emit("close"));
+    this.socket.on("error", (err) => {
+      this.clearReadQueue(err);
+      this.isConnected = false;
+      this.emit("error", err);
+    });
+
+    this.socket.on("close", () => {
+      this.clearReadQueue(new Error("Connection closed"));
+      this.isConnected = false;
+      this.emit("close");
+    });
   }
 
   private processBuffer(): void {
-    while (this.buffer.length >= 4 && this.pendingRead) {
+    while (this.buffer.length >= 4 && this.readQueue.length > 0) {
       const length = this.buffer.readUInt32BE(0);
       if (this.buffer.length >= 4 + length) {
         const messageData = this.buffer.slice(4, 4 + length);
         this.buffer = this.buffer.slice(4 + length);
 
-        try {
-          const response = Response.deserializeBinary(messageData);
-          this.pendingRead.resolve(response);
-          this.pendingRead = null;
-        } catch (err) {
-          this.pendingRead?.reject(err);
-          this.pendingRead = null;
+        const pendingRead = this.readQueue.shift();
+        if (pendingRead) {
+          try {
+            const response = Response.deserializeBinary(messageData);
+            pendingRead.resolve(response);
+          } catch (err) {
+            pendingRead.reject(err);
+          }
         }
       } else {
         break;
+      }
+    }
+  }
+
+  private clearReadQueue(error: Error): void {
+    while (this.readQueue.length > 0) {
+      const pendingRead = this.readQueue.shift();
+      if (pendingRead) {
+        pendingRead.reject(error);
       }
     }
   }
@@ -55,11 +76,13 @@ export class Connection extends EventEmitter {
     return new Promise((resolve, reject) => {
       const onConnect = () => {
         this.socket.off("error", onError);
+        this.isConnected = true;
         resolve();
       };
 
       const onError = (err: Error) => {
         this.socket.off("connect", onConnect);
+        this.isConnected = false;
         reject(err);
       };
 
@@ -87,17 +110,19 @@ export class Connection extends EventEmitter {
 
   async read(): Promise<Response> {
     return new Promise((resolve, reject) => {
-      if (this.pendingRead) {
-        reject(new Error("Already waiting for a response"));
+      // Check if we've exceeded the maximum queue size
+      if (this.readQueue.length >= this.maxReadQueueSize) {
+        reject(new Error(`Read queue is full (max: ${this.maxReadQueueSize})`));
         return;
       }
 
-      this.pendingRead = { resolve, reject };
+      this.readQueue.push({ resolve, reject });
       this.processBuffer(); // Check if we already have data
     });
   }
 
   async close(): Promise<void> {
+    this.isConnected = false;
     return new Promise((resolve) => {
       if (this.socket.destroyed) {
         resolve();
@@ -106,5 +131,30 @@ export class Connection extends EventEmitter {
         this.socket.end();
       }
     });
+  }
+
+  // Health check methods
+  isHealthy(): boolean {
+    return (
+      this.isConnected &&
+      !this.socket.destroyed &&
+      this.readQueue.length < this.maxReadQueueSize
+    );
+  }
+
+  getReadQueueSize(): number {
+    return this.readQueue.length;
+  }
+
+  getConnectionStats(): {
+    isConnected: boolean;
+    readQueueSize: number;
+    socketDestroyed: boolean;
+  } {
+    return {
+      isConnected: this.isConnected,
+      readQueueSize: this.readQueue.length,
+      socketDestroyed: this.socket.destroyed,
+    };
   }
 }

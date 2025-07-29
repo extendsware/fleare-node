@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import { commands, CommandMap } from "./commands";
 import { ConnectionPool } from "./connections";
 import { Options, ClientState } from "./types";
-import { Command, Response } from "./protobuf/compiled/comm_pb";
+import { Command, Response } from "./compiled/comm_pb";
 
 type CommandFunctions = {
   [K in keyof CommandMap]: CommandMap[K] extends (
@@ -71,8 +71,7 @@ export class Client extends EventEmitter {
     }
 
     try {
-
-      // convert all args as a string 
+      // convert all args as a string
       return await this.connectionPool.sendCommand(command, args);
     } catch (err) {
       this.emit(ClientState.ERROR, err);
