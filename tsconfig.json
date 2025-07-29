@@ -8,9 +8,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true, // Generates .d.ts files for type definitions
-    "sourceMap": false    // Generates source maps for debugging
+    "declaration": true,
+    "sourceMap": false
   },
-  "include": ["libs/**/*", "libs/protobuf/compiled/**/*"],
-  "exclude": ["node_modules", "tests"],
+  "include": ["libs/**/*", "libs/compiled/*"],
+  "exclude": ["node_modules", "tests", "example"]
 }

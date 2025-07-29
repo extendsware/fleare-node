@@ -1,4 +1,4 @@
-import fleare, { Options } from "../libs";
+import fleare, { Options, createClient } from "../libs";
 
 interface TestResult {
   requestId: number;
@@ -36,7 +36,7 @@ class HighConcurrencyTest {
   async initialize(): Promise<void> {
     console.log("🔄 Initializing client with options:", this.options);
 
-    this.client = fleare.createClient(this.host, this.port, this.options);
+    this.client = createClient(this.host, this.port, this.options);
 
     // Set up event listeners for monitoring
     this.client.on("error", (err: Error) => {
