@@ -24,6 +24,7 @@ import listGPop from "./LIST_GPOP";
 import listGet from "./LIST_GET";
 import listLen from "./LIST_LEN";
 import listFind from "./LIST_FIND";
+import listUpdate from "./LIST_UPDATE";
 import jsonSet from "./JSON_SET";
 import jsonAdd from "./JSON_ADD";
 import jsonMerge from "./JSON_MERGE";
@@ -56,6 +57,7 @@ export const commands = {
   listSet,
   listPush,
   listIset,
+  listUpdate,
   listPop,
   listGet,
   listLen,

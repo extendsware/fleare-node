@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { commands, CommandMap } from "./commands";
 import { ConnectionPool } from "./connections";
 import { Options, ClientState } from "./types";
+import PubSubClient from "./connections/pubsub";
 import { Command, Response } from "./compiled/comm_pb";
 
 type CommandFunctions = {
@@ -23,10 +24,17 @@ export class Client extends EventEmitter {
     private options: Options,
   ) {
     super();
+
+    this.host = host;
+    this.port = port;
+    this.options = options;
+
     this.connectionPool = new ConnectionPool(host, port, options);
 
     this.connectionPool.on("error", (err) => this.emit("error", err));
     this.connectionPool.on("close", () => this.emit("close"));
+    this.connectionPool.on("pubsubError", () => this.emit("pubsubError"));
+    this.connectionPool.on("pubsubClose", () => this.emit("pubsubClose"));
 
     // Attach commands with `this` binding
     for (const [name, handler] of Object.entries(commands)) {
@@ -98,6 +106,15 @@ export class Client extends EventEmitter {
 
   getState(): ClientState {
     return this.state;
+  }
+
+  // Helpers to create pub or sub client
+  createPubClient(): PubSubClient {
+    return new PubSubClient(this.host, this.port, this.options.username, this.options.password);
+  }
+
+  createSubClient(): PubSubClient {
+    return new PubSubClient(this.host, this.port, this.options.username, this.options.password);
   }
 }
 

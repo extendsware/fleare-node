@@ -284,7 +284,7 @@ proto.comm.Response.prototype.toObject = function(opt_includeInstance) {
 proto.comm.Response.toObject = function(includeInstance, msg) {
   var f, obj = {
 clientId: jspb.Message.getFieldWithDefault(msg, 1, ""),
-reqId: jspb.Message.getFieldWithDefault(msg, 2, ""),
+topic: jspb.Message.getFieldWithDefault(msg, 2, ""),
 status: jspb.Message.getFieldWithDefault(msg, 3, ""),
 result: msg.getResult_asB64()
   };
@@ -329,7 +329,7 @@ proto.comm.Response.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setReqId(value);
+      msg.setTopic(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
@@ -375,7 +375,7 @@ proto.comm.Response.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getReqId();
+  f = message.getTopic();
   if (f.length > 0) {
     writer.writeString(
       2,
@@ -418,10 +418,10 @@ proto.comm.Response.prototype.setClientId = function(value) {
 
 
 /**
- * optional string req_id = 2;
+ * optional string topic = 2;
  * @return {string}
  */
-proto.comm.Response.prototype.getReqId = function() {
+proto.comm.Response.prototype.getTopic = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -430,7 +430,7 @@ proto.comm.Response.prototype.getReqId = function() {
  * @param {string} value
  * @return {!proto.comm.Response} returns this
  */
-proto.comm.Response.prototype.setReqId = function(value) {
+proto.comm.Response.prototype.setTopic = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "fleare",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "In memory database client for interacting with the Fleare server.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

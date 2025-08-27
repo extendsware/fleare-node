@@ -33,8 +33,8 @@ export class Response extends jspb.Message {
   getClientId(): string;
   setClientId(value: string): void;
 
-  getReqId(): string;
-  setReqId(value: string): void;
+  getTopic(): string;
+  setTopic(value: string): void;
 
   getStatus(): string;
   setStatus(value: string): void;
@@ -57,7 +57,7 @@ export class Response extends jspb.Message {
 export namespace Response {
   export type AsObject = {
     clientId: string,
-    reqId: string,
+    topic: string,
     status: string,
     result: Uint8Array | string,
   }
